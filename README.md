@@ -37,3 +37,7 @@ It will serve on port `8080` by default
 >`make run` will build the `flight_tracker` service & run it
 
 >`make stop` will teardown the `flight_tracker` service
+
+>`make test` will run test cases & test `flight_tracker` service
+
+>`make coverage` will check the code coverage of `flight_tracker` service
