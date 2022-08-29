@@ -1,8 +1,11 @@
 run: ## build/run flight_tracker
+	go run ./cmd/server.go
+
+docker_run: ## build/run flight_tracker as docker  image
 	docker build -t flight_tracker .
 	docker run -p 8080:8080 flight_tracker
 
-stop: ## shutdown & remove flight_tracker
+docker_stop: ## shutdown & remove flight_tracker docker image
 	docker stop flight_tracker
 	docker rm flight_tracker
 

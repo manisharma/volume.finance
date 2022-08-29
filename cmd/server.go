@@ -21,17 +21,20 @@ func main() {
 	http.HandleFunc("/track", route.FlightHandler)
 
 	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: http.DefaultServeMux,
+		Addr:         port,
+		Handler:      http.DefaultServeMux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
 	}
 
-	go startListening(srv, port)
+	go startListening(srv)
 
 	awaitInterruption(srv)
 }
 
-func startListening(srv *http.Server, port string) {
-	log.Println("listening on port", port)
+func startListening(srv *http.Server) {
+
+	log.Println("listening on port", srv.Addr, ", cmd+c or ctrl+c to stop")
 	if err := srv.ListenAndServe(); err != nil {
 		if err != http.ErrServerClosed {
 			log.Fatalln("failed to listen, error:", err.Error())

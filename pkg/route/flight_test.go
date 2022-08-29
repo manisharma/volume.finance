@@ -2,6 +2,7 @@ package route
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -194,7 +195,7 @@ func Test_FindBaseFlight(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotF, err := tt.flights.FindBaseFlight()
+			gotF, err := tt.flights.FindBaseFlight(context.Background())
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Flights.FindBaseFlight() error = %v, wantErr %v", err, tt.wantErr)
 				return

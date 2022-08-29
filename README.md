@@ -28,15 +28,25 @@
 
 
 ## prerequisites
-`flight_tracker` service at bare minimim needs `docker` installed/running
+<b>`go` or `docker`</b>
+
+`flight_tracker` service at bare minimim needs `go` installed or `docker` installed/running
 
 It will serve on port `8080` by default
 
 ## execution
 
->`make run` will build the `flight_tracker` service & run it
+<b>with `go` installed</b>
 
->`make stop` will teardown the `flight_tracker` service
+>`make run` will run the `flight_tracker` service
+
+<b>with `docker` installed</b>
+
+>`make docker_run` will start the `flight_tracker` service
+
+>`make docker_stop` will teardown the `flight_tracker` service
+
+<b>common</b>
 
 >`make test` will run test cases & test `flight_tracker` service
 

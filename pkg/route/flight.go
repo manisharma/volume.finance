@@ -1,10 +1,12 @@
 package route
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type Flight struct {
@@ -34,7 +36,9 @@ var FlightHandler http.HandlerFunc = func(w http.ResponseWriter, r *http.Request
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	flight, err := flights.FindBaseFlight()
+	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+	defer cancel()
+	flight, err := flights.FindBaseFlight(ctx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -45,9 +49,14 @@ var FlightHandler http.HandlerFunc = func(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(res)
 }
 
-func (flights Flights) FindBaseFlight() (f *Flight, err error) {
+func (flights Flights) FindBaseFlight(ctx context.Context) (f *Flight, err error) {
 	m := make(map[string]int)
 	for _, flight := range flights {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
 		if v, ok := m[flight.Source]; ok {
 			m[flight.Source] = v + 1
 		} else {
@@ -77,6 +86,11 @@ func (flights Flights) FindBaseFlight() (f *Flight, err error) {
 	}
 
 	for _, flight := range flights {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
 		if flight.Source == keyWithVal1[0] {
 			f.Source = keyWithVal1[0]
 			f.Destination = keyWithVal1[1]
